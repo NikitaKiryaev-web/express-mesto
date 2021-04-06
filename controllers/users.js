@@ -16,10 +16,8 @@ const getUsers = (req, res, next) => {
 // Получить данные о текущем пользователе
 const getMyUser = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail(new Error("Нет пользователя с таким id"))
-    .then((user) => {
-      return res.status(200).send(user);
-    })
+    .orFail(new Error('Нет пользователя с таким id'))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
         throw new ValidationError('Id неверный');
@@ -32,10 +30,8 @@ const getMyUser = (req, res, next) => {
 // Получить данные профиля по id
 const getProfile = (req, res, next) => {
   User.findById(req.params.id)
-    .orFail(new Error("Нет пользователя с таким id"))
-    .then((user) => {
-      return res.status(200).send(user);
-    })
+    .orFail(new Error('Нет пользователя с таким id'))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
         throw new ValidationError('Id неверный');
@@ -61,14 +57,13 @@ const createUser = (req, res, next) => {
         .then((user) => res.status(200).send(user))
         .catch((err) => {
           if (err.name === 'MongoError' || err.code === 11000) {
-            throw new DuplicateError('Пользователь с таким email уже существует')
-          }
-          else if (err.name === 'ValidationError' || err.name === 'CastError') {
-            throw new ValidationError('Пароль или почта некорректны')
+            throw new DuplicateError('Пользователь с таким email уже существует');
+          } else if (err.name === 'ValidationError' || err.name === 'CastError') {
+            throw new ValidationError('Пароль или почта некорректны');
           }
         })
         .catch(next);
-    })
+    });
 };
 
 // Обновить данные пользователя
@@ -79,9 +74,7 @@ const updateProfile = (req, res, next) => {
     runValidators: true, // валидация данных перед изменением
   })
     .orFail(new Error('Нет пользователя с таким Id'))
-    .then((data) => {
-      return res.status(200).send(data);
-    })
+    .then((data) => res.status(200).send(data))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         throw new ValidationError('Введенные данные некорректны');
@@ -99,9 +92,7 @@ const updateAvatar = (req, res, next) => {
     runValidators: true,
   })
     .orFail(new Error('Нет пользователя с таким id'))
-    .then((data) => {
-      return res.status(200).send(data);
-    })
+    .then((data) => res.status(200).send(data))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         throw new ValidationError('Введенные данные некорректны');
@@ -113,10 +104,10 @@ const updateAvatar = (req, res, next) => {
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
-   return User.findUserByCredentials(email, password)
+  return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, "41452244c0ff5e928b37b9ced5a7670f52fe8b5a7aa431eb88a0ed06ad321295", { expiresIn: '7d' });
-      res.send ({token});
+      const token = jwt.sign({ _id: user._id }, '41452244c0ff5e928b37b9ced5a7670f52fe8b5a7aa431eb88a0ed06ad321295', { expiresIn: '7d' });
+      res.send({ token });
     })
     .catch((err) => {
       throw new AuthError(err.message);

@@ -29,11 +29,10 @@ app.use(auth);
 app.use('/', userRouter);
 app.use('/', cardRouter);
 
-
-app.use((err, req, res, next) => {
-  const {statusCode = 500, message} = err;
+app.use((err, req, res) => {
+  const { statusCode = 500, message } = err;
   res.status(statusCode).send({
-    message: statusCode === 500 ? 'Произошла ошибка на сервере' : message
+    message: statusCode === 500 ? 'Произошла ошибка на сервере' : message,
   });
 });
 app.listen(PORT);

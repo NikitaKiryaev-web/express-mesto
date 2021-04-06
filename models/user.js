@@ -22,8 +22,8 @@ const userSchema = new mongoose.Schema({
       validator(link) {
         return /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/.test(link);
       },
-      message: (props) => `${props.value} ссылка невалидна`
-    }
+      message: (props) => `${props.value} ссылка невалидна`,
+    },
   },
   email: {
     type: String,
@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 2,
-    select: false
+    select: false,
   },
 });
 
