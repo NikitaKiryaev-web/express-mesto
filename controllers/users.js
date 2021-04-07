@@ -69,6 +69,9 @@ const createUser = (req, res, next) => {
 // Обновить данные пользователя
 const updateProfile = (req, res, next) => {
   const { name, about } = req.body;
+   if(!name || !about) {
+    throw new ValidationError("Введенные данные некорректны")
+  }
   User.findByIdAndUpdate(req.user._id, { name, about }, {
     new: true, // в then попадет обновленная запись
     runValidators: true, // валидация данных перед изменением
@@ -87,6 +90,9 @@ const updateProfile = (req, res, next) => {
 // Обновить аватар пользователя
 const updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
+  if(!avatar) {
+    throw new ValidationError("Введенные данные некорректны");
+  }
   User.findByIdAndUpdate(req.user._id, { avatar }, {
     new: true,
     runValidators: true,
@@ -95,7 +101,7 @@ const updateAvatar = (req, res, next) => {
     .then((data) => res.status(200).send(data))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        throw new ValidationError('Введенные данные некорректны');
+        throw new ValidationError(err.message);
       }
       throw new NotFoundError(err.message);
     })
