@@ -16,7 +16,7 @@ const createCard = (req, res, next) => {
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.status(200).send(card))
     .catch((err) => {
-      throw new ValidationError("Данные неверны");
+      throw new ValidationError('Данные неверны');
     })
     .catch(next);
 };

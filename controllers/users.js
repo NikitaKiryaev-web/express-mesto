@@ -69,8 +69,8 @@ const createUser = (req, res, next) => {
 // Обновить данные пользователя
 const updateProfile = (req, res, next) => {
   const { name, about } = req.body;
-   if(!name || !about) {
-    throw new ValidationError("Введенные данные некорректны")
+  if (!name || !about) {
+    throw new ValidationError('Введенные данные некорректны');
   }
   User.findByIdAndUpdate(req.user._id, { name, about }, {
     new: true, // в then попадет обновленная запись
@@ -90,8 +90,8 @@ const updateProfile = (req, res, next) => {
 // Обновить аватар пользователя
 const updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  if(!avatar) {
-    throw new ValidationError("Введенные данные некорректны");
+  if (!avatar) {
+    throw new ValidationError('Введенные данные некорректны');
   }
   User.findByIdAndUpdate(req.user._id, { avatar }, {
     new: true,
