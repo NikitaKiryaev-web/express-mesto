@@ -12,9 +12,7 @@ const cors = require('cors');
 dotenv.config();
 const { PORT = 3000 } = process.env;
 
-const corsOptions = {
-  origin: 'https://kiryaev.students.nomoredomains.club'
-};
+
 
 const app = express();
 
@@ -24,7 +22,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false,
 });
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
