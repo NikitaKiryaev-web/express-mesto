@@ -13,7 +13,7 @@ dotenv.config();
 const { PORT = 3000 } = process.env;
 
 const corsOptions = {
-  origin: 'http://kiryaev.students.nomoredomains.club'
+  origin: 'https://kiryaev.students.nomoredomains.club'
 };
 
 const app = express();
