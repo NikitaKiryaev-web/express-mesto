@@ -1,10 +1,15 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
 const User = require('../models/user');
 const AuthError = require('../errors/AuthError');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
 const DuplicateError = require('../errors/DuplicateError');
+
+dotenv.config();
+
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 // Получить всех пользователей
 const getUsers = (req, res, next) => {
@@ -112,7 +117,7 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, '41452244c0ff5e928b37b9ced5a7670f52fe8b5a7aa431eb88a0ed06ad321295', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, `${NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret'}`, { expiresIn: '7d' });
       res.send({ token });
     })
     .catch((err) => {
