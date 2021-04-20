@@ -32,7 +32,7 @@ const deleteCard = (req, res, next) => {
       }
 
       Card.findByIdAndDelete(req.params.cardId)
-        .then((data) => res.status(200).send('Карточка удалена'))
+        .then((data) => res.status(200).send(data))
         .catch(next);
     })
     .catch((err) => {
