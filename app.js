@@ -8,6 +8,9 @@ const cardRouter = require('./routes/cards');
 const { createUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const {validateSignUp, validateSignIn} = require('./middlewares/validation');
+const NotFoundError = require('./errors/NotFoundError');
+const {errors} = require('celebrate');
 
 dotenv.config();
 const { PORT = 3000 } = process.env;
@@ -33,20 +36,26 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signin', validateSignIn, login); // вторым аргументом передаем middleware для валидации приходящих данных до обращения к бд
+app.post('/signup', validateSignUp, createUser);
 
 app.use(auth);
 
 app.use('/', userRouter);
 app.use('/', cardRouter);
 
+app.use('*', () => {
+  throw new NotFoundError("Такой страницы не существует");
+})
+
 app.use(errorLogger);
+app.use(errors()); // обработчик ошибок celebrate
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res.status(statusCode).send({
     message: statusCode === 500 ? 'Произошла ошибка на сервере' : message,
   });
+  next();
 });
 app.listen(PORT);

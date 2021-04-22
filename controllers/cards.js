@@ -28,7 +28,7 @@ const deleteCard = (req, res, next) => {
     .orFail(new Error('Нет такой карточки'))
     .then((card) => {
       if (card.owner.toString() !== userId) {
-        throw new ForbiddenError('Вы не можете удалить чужую карточку');
+        next(new ForbiddenError('Вы не можете удалить чужую карточку'));
       }
 
       Card.findByIdAndDelete(req.params.cardId)

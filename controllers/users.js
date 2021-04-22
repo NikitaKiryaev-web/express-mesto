@@ -59,7 +59,13 @@ const createUser = (req, res, next) => {
       User.create({
         name, about, avatar, email, password: hash,
       })
-        .then((user) => res.status(200).send(user))
+        .then((user) => res.status(200).send({
+          _id: user._id,
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+          email: user.email,
+        }))
         .catch((err) => {
           if (err.name === 'MongoError' || err.code === 11000) {
             throw new DuplicateError('Пользователь с таким email уже существует');
